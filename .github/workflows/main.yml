@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/*
+      # - feature/*
   pull_request:
     branches:
       - main
@@ -31,8 +31,7 @@ jobs:
 
       - name: Run image
         run: |
-          docker build -t webpronest:test .
-          docker run --rm webpronest:test npm run build
+          docker run --rm webpronest:${{ github.sha }} npm run build
 
   deploy:
     needs: build
