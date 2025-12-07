@@ -4,7 +4,7 @@ import Image, { StaticImageData } from 'next/image';
 
 type ClassesProps = {
   title: string;     // define prop type
-  price?: string; // optional prop (with ?)
+  price?: number; // optional prop (with ?)
   image: StaticImageData;
 };
 

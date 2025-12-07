@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "./providers/AuthProvider";
 
 export const metadata: Metadata = {
   title: "WebProNest | Live Web Development Classes in India",
@@ -24,15 +25,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({children,}: {
+export default function RootLayout({ children, }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
-        <Navbar />
-        <main className="flex-1 container mx-auto p-6">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-1 container mx-auto p-6">{children}</main>
+          <Footer />
+          <script src="https://accounts.google.com/gsi/client" async defer></script>
+        </AuthProvider>
       </body>
     </html>
   );
