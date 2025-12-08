@@ -45,7 +45,10 @@ jobs:
               exit 0
             fi
 
-            echo "Health not healthy yet... retrying ($i/40)"
+            echo "Health not healthy yet... "
+            echo "Showing docker logs"
+            docker logs app_test
+            echo "retrying ($i/40)"
             sleep 3
           done
 
