@@ -73,6 +73,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ${{ secrets.PROJECT_PATH }}
+            pwd
             git pull origin main
             docker compose --profile prod down
             docker compose --profile prod up --build -d
