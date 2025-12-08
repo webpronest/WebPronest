@@ -25,6 +25,25 @@ jobs:
           tags: webpronest:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          
+      - name: Start container
+        run: |
+          docker run -d --name app_test -p 3000:3000 webpronest:${{ github.sha }}
+
+      # 🔥 ADD THIS HEALTH CHECK STEP
+      - name: Health check
+        run: |
+          echo "Waiting for application to become healthy..."
+          for i in {1..10}; do
+            if curl -f http://localhost:3000/api/health > /dev/null 2>&1; then
+              echo "Health check passed!"
+              exit 0
+            fi
+            echo "Health check failed, retrying..."
+            sleep 3
+          done
+          echo "Application failed health check!"
+          exit 1
 
   deploy:
     needs: build
@@ -43,6 +62,6 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
-            docker compose down
-            docker compose up --build -d
+            docker compose --profile prod down
+            docker compose --profile prod up --build -d
             docker system prune -a -f
