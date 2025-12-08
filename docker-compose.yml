@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  # Development service (runs by default when no profile is specified)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
+    image: webpronest-frontend:${TAG:-latest}
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - ./:/app:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-3000}/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - webnet
+
+  # Production service (activated with --profile prod)
+  app_prod:
+    profiles:
+      - prod
+    image: ${IMAGE_NAME:-webpronest-frontend}:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+    # no bind mounts in production
+    volumes: []
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-3000}/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
