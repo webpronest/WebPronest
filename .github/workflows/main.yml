@@ -29,20 +29,28 @@ jobs:
       - name: Start container
         run: |
           docker run -d --name app_test -p 3000:3000 webpronest:${{ github.sha }}
+          docker inspect --format '{{json .State.Health}}' app_test
 
       # 🔥 ADD THIS HEALTH CHECK STEP
       - name: Health check
         run: |
           echo "Waiting for application to become healthy..."
-          for i in {1..10}; do
-            if curl -f http://localhost:3000/api/health > /dev/null 2>&1; then
-              echo "Health check passed!"
+          for i in {1..40}; do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' app_test || echo "starting")
+
+            echo "Current status: $STATUS"
+
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Container is healthy!"
               exit 0
             fi
-            echo "Health check failed, retrying..."
+
+            echo "Health not healthy yet... retrying ($i/40)"
             sleep 3
           done
-          echo "Application failed health check!"
+
+          echo "Container failed health check!"
+          docker logs app_test
           exit 1
 
   deploy:
