@@ -16,11 +16,9 @@ services:
     volumes:
       - ./:/app:cached
       - /app/node_modules
-    environment:
-      NODE_ENV: development
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-3000}/health || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -47,7 +45,7 @@ services:
     volumes: []
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-3000}/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:${APP_PORT:-3000}/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
