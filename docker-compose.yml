@@ -67,4 +67,5 @@ services:
 
 networks:
   webnet:
+    name: frontend-network
     driver: bridge
