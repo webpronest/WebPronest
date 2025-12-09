@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import GoogleLoginButton from "./GoogleLoginButton";
 

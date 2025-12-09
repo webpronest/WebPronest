@@ -4,6 +4,16 @@
 FROM node:20-slim AS builder
 WORKDIR /app
 
+# Receive arguments for build
+ARG NEXT_PUBLIC_BACKEND_URL
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ARG NEXT_PUBLIC_REDIRECT_URI
+
+# Set environment variables for build with the received arguments
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+ENV NEXT_PUBLIC_REDIRECT_URI=${NEXT_PUBLIC_REDIRECT_URI}
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+
 # Install dependencies
 COPY package*.json ./
 RUN npm ci
@@ -24,7 +34,7 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/next.config.ts ./
 
 
