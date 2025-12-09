@@ -1,8 +1,7 @@
-version: "3.8"
-
 services:
   # Development service (runs by default when no profile is specified)
   app:
+    container_name: webpronest-frontend-dev
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,6 +29,7 @@ services:
     profiles:
       - prod
     image: ${IMAGE_NAME:-webpronest-frontend}:${TAG:-latest}
+    container_name: webpronest-frontend-prod
     build:
       context: .
       dockerfile: Dockerfile

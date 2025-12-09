@@ -76,5 +76,5 @@ jobs:
             pwd
             git pull origin main
             docker compose --profile prod down
-            docker compose --profile prod up --build -d
+            docker compose --profile prod up --build -d app_prod
             docker system prune -a -f
