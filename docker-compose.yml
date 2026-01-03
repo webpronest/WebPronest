@@ -41,7 +41,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
     # no bind mounts in production
@@ -67,5 +67,5 @@ services:
 
 networks:
   webnet:
-    name: frontend-network
+    name: webpronest-network
     driver: bridge
