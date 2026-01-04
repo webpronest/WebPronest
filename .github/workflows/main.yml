@@ -25,7 +25,12 @@ jobs:
           tags: webpronest:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          
+
+      - name: Ensure Docker network exists
+        run: |
+          docker network inspect webpronest-network >/dev/null 2>&1 \
+            || docker network create webpronest-network
+
       - name: Start container
         run: |
           docker run -d --name app_test -p 3000:3000 webpronest:${{ github.sha }}
@@ -74,12 +79,21 @@ jobs:
           script: |
             # Exit on any error
             set -e
+
+            # Navigate to project directory
             cd ${{ secrets.PROJECT_PATH }}
 
             # Ensure we're on the desired branch and up-to-date
             git fetch --all
             git reset --hard origin/main
+
+            # Ensure Docker network exists
+            docker network inspect webpronest-network >/dev/null 2>&1 \
+              || docker network create webpronest-network
             
+            # Pull latest changes and redeploy
             docker compose --profile prod down
-            docker compose --profile prod up --build -d app_prod
+            docker compose --profile prod up --build -d webpronest-frontend-prod
+
+            # Clean up unused Docker resources
             docker system prune -a -f

@@ -25,7 +25,7 @@ services:
       - webnet
 
   # Production service (activated with --profile prod)
-  app_prod:
+  webpronest-frontend-prod:
     profiles:
       - prod
     image: ${IMAGE_NAME:-webpronest-frontend}:${TAG:-latest}
@@ -68,4 +68,4 @@ services:
 networks:
   webnet:
     name: webpronest-network
-    driver: bridge
+    external: true
