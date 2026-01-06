@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import LoaderIcon from "@/components/LoaderIcon";
 import ProgressDots from "@/components/ProgressDots";
 import { useAuth } from "@/app/providers/AuthProvider";
+import { apiFetch } from "@/app/lib/apiFetch";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -50,7 +51,8 @@ export function GoogleCallback() {
       setMessage("Exchanging authorization code…");
 
       try {
-        const res = await fetch("http://localhost:8000/auth/google/callback", {
+
+        const res = await apiFetch("/auth/google/callback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
 		  credentials: "include",
