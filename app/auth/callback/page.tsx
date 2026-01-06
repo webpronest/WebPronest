@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import LoaderIcon from "@/components/LoaderIcon";
 import ProgressDots from "@/components/ProgressDots";
 import { useAuth } from "@/app/providers/AuthProvider";
-import { apiFetch } from "@/app/lib/apiFetch";
+import apiFetch from "@/app/lib/apiFetch";
 
 type Status = "idle" | "loading" | "success" | "error";
 
